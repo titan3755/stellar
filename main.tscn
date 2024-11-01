@@ -1,37 +1,55 @@
-[gd_scene load_steps=5 format=3 uid="uid://cwshuqspm4gx1"]
+[gd_scene load_steps=6 format=3 uid="uid://cwshuqspm4gx1"]
 
 [ext_resource type="Script" path="res://main.gd" id="1_pbpux"]
-[ext_resource type="Script" path="res://camera_2d.gd" id="2_1d1xs"]
-[ext_resource type="Texture2D" uid="uid://c2srtt02p0k5l" path="res://assets/black_background.png" id="2_m2oao"]
-[ext_resource type="PackedScene" uid="uid://ckdorjbxjwpx8" path="res://celestial_object.tscn" id="3_3yg7d"]
+[ext_resource type="Script" path="res://main_gui.gd" id="3_1y64m"]
+[ext_resource type="FontFile" uid="uid://cswx3vs01k7uk" path="res://assets/Beyonders.ttf" id="3_jitsp"]
+[ext_resource type="FontFile" uid="uid://btgqxcarx0pbb" path="res://assets/spaceranger.ttf" id="4_2ffr2"]
+[ext_resource type="Texture2D" uid="uid://d2622ab2xk8w2" path="res://assets/guibg.jpeg" id="5_8rnn5"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_pbpux")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-limit_left = -10010800
-script = ExtResource("2_1d1xs")
-cam_velocity = 500.0
+[node name="MainGUI" type="CanvasLayer" parent="."]
+script = ExtResource("3_1y64m")
 
-[node name="TextureRect" type="TextureRect" parent="."]
-offset_left = -79663.0
-offset_top = -54232.0
-offset_right = 87686.0
-offset_bottom = 53696.0
-texture = ExtResource("2_m2oao")
-expand_mode = 1
+[node name="GUIBackground" type="TextureRect" parent="MainGUI"]
+offset_right = 1792.0
+offset_bottom = 1024.0
+texture = ExtResource("5_8rnn5")
+flip_h = true
 
-[node name="CobjOne" parent="." instance=ExtResource("3_3yg7d")]
-init_pos = Vector2(-25.92, -13.98)
-mass = 30.0
-color = Color(1, 0.401494, 0.547291, 1)
+[node name="Title" type="Label" parent="MainGUI"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -486.0
+offset_top = -81.57
+offset_right = 486.0
+offset_bottom = 26.43
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("4_2ffr2")
+theme_override_font_sizes/font_size = 121
+text = "Stellar v-1.0.0"
+horizontal_alignment = 1
 
-[node name="CobjTwo" parent="." instance=ExtResource("3_3yg7d")]
-init_pos = Vector2(26.59, -18.22)
-mass = 999999.0
-color = Color(2.40654e-06, 0.638316, 0.714628, 1)
+[node name="TBPButton" type="Button" parent="MainGUI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -182.275
+offset_top = -282.835
+offset_right = 182.275
+offset_bottom = -246.835
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_hover_color = Color(0.0962047, 0.0962048, 0.0962047, 1)
+theme_override_fonts/font = ExtResource("3_jitsp")
+theme_override_font_sizes/font_size = 16
+text = "Three Body Problem"
 
-[node name="CobjThree" parent="." instance=ExtResource("3_3yg7d")]
-init_pos = Vector2(-87.465, -22.805)
-mass = 999999.0
-color = Color(0, 0.63034, 0.579712, 1)
+[connection signal="pressed" from="MainGUI/TBPButton" to="." method="_on_tbp_button_pressed"]

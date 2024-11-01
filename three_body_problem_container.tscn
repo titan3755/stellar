@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://dhmpop28jdvbq"]
+
+[ext_resource type="Script" path="res://three_body_problem_container.gd" id="1_epau5"]
+[ext_resource type="PackedScene" uid="uid://ckdorjbxjwpx8" path="res://celestial_object.tscn" id="1_q3crn"]
+[ext_resource type="Texture2D" uid="uid://c2srtt02p0k5l" path="res://assets/black_background.png" id="2_f2lfk"]
+[ext_resource type="Script" path="res://camera_2d.gd" id="3_jobkf"]
+
+[node name="ThreeBodyProblemContainer" type="Node2D"]
+script = ExtResource("1_epau5")
+metadata/_edit_group_ = true
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = -79663.0
+offset_top = -54232.0
+offset_right = 87686.0
+offset_bottom = 53696.0
+texture = ExtResource("2_f2lfk")
+expand_mode = 1
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("3_jobkf")
+
+[node name="TBPGui" type="CanvasLayer" parent="."]
+
+[node name="CobjOne" parent="." instance=ExtResource("1_q3crn")]
+init_pos = Vector2(-25.92, -13.98)
+mass = 30.0
+color = Color(1, 0.401494, 0.547291, 1)
+
+[node name="CobjTwo" parent="." instance=ExtResource("1_q3crn")]
+init_pos = Vector2(26.59, -18.22)
+color = Color(2.40654e-06, 0.638316, 0.714628, 1)
+
+[node name="CobjThree" parent="." instance=ExtResource("1_q3crn")]
+init_pos = Vector2(-87.465, -22.805)
+color = Color(0, 0.63034, 0.579712, 1)
