@@ -2,6 +2,7 @@ extends Camera2D
 
 @export var cam_velocity:float = 400.0
 @export var cam_zoom_velocity:float = 2.5
+@export var cam_gui_state:bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -9,7 +10,8 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	input_process(delta)
+	if !cam_gui_state:
+		input_process(delta)
 	
 func input_process(del: float):
 	if Input.is_action_pressed("cam_up"):
@@ -24,3 +26,7 @@ func input_process(del: float):
 		zoom += Vector2(cam_zoom_velocity * del, cam_zoom_velocity * del)
 	if Input.is_action_pressed("cam_zoom_out"):
 		zoom -= Vector2(cam_zoom_velocity * del, cam_zoom_velocity * del)
+
+
+func _on_tbp_gui_control_lock(state: bool) -> void:
+	cam_gui_state = state

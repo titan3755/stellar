@@ -1,6 +1,8 @@
 extends Node2D
 
-const UNIVERSAL_GRAVITATIONAL_CONSTANT: float = 6.6743 * pow(10, -1)
+@export var UNIVERSAL_GRAVITATIONAL_CONSTANT: float = 6.6743 * pow(10, -1)
+@export var gui_state: bool = false
+var shown:bool = false
 
 var screen_size
 
@@ -8,13 +10,21 @@ var screen_size
 func _ready() -> void:
 	randomize()
 	screen_size = get_viewport_rect().size
+	$TBPGui.hide()
 	$CobjOne.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
 	$CobjTwo.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
 	$CobjThree.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	input_process(delta)
+	if !gui_state:
+		input_process(delta)
+	if gui_state && !shown:
+		$TBPGui.show()
+		shown = true
+	if !gui_state && shown:
+		$TBPGui.hide()
+		shown = false
 	$CobjOne.effective_force = resultant_vector_force($CobjOne.mass, $CobjTwo.mass, $CobjThree.mass, $CobjOne.position, $CobjTwo.position, $CobjThree.position, 0, UNIVERSAL_GRAVITATIONAL_CONSTANT)
 	$CobjTwo.effective_force = resultant_vector_force($CobjOne.mass, $CobjTwo.mass, $CobjThree.mass, $CobjOne.position, $CobjTwo.position, $CobjThree.position, 1, UNIVERSAL_GRAVITATIONAL_CONSTANT)
 	$CobjThree.effective_force = resultant_vector_force($CobjOne.mass, $CobjTwo.mass, $CobjThree.mass, $CobjOne.position, $CobjTwo.position, $CobjThree.position, 2, UNIVERSAL_GRAVITATIONAL_CONSTANT)
@@ -54,3 +64,25 @@ func input_process(_del: float):
 		$CobjOne.acceleration = Vector2.ONE
 		$CobjTwo.acceleration = Vector2.ONE
 		$CobjThree.acceleration = Vector2.ONE
+
+func paramEditorDataProcessor(_data: String):
+	pass
+
+func _on_tbp_gui_control_lock(state: bool) -> void:
+	gui_state = state
+
+func _on_tbp_gui_params_editor_data(data: String) -> void:
+	paramEditorDataProcessor(data)
+	
+	
+## Modifiable data -->>
+## 1. CobjOne -->>
+## [mass][radius][color][position][velocity][acceleration][clamping/limits]
+## 2. CobjTwo -->>
+## [mass][radius][color][position][velocity][acceleration][clamping/limits]
+## 3. CobjThree -->>
+## [mass][radius][color][position][velocity][acceleration][clamping/limits]
+## 4. Camera2D -->>
+## [position][zoom/limits][zoom/scale][cam_velocity][zoom_velocity]
+## 5. Main -->>
+## [UNIVERSAL_GRAVITATIONAL_CONSTANT]

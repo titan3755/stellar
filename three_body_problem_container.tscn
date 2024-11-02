@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://dhmpop28jdvbq"]
+[gd_scene load_steps=7 format=3 uid="uid://dhmpop28jdvbq"]
 
 [ext_resource type="Script" path="res://three_body_problem_container.gd" id="1_epau5"]
 [ext_resource type="PackedScene" uid="uid://ckdorjbxjwpx8" path="res://celestial_object.tscn" id="1_q3crn"]
 [ext_resource type="Texture2D" uid="uid://c2srtt02p0k5l" path="res://assets/black_background.png" id="2_f2lfk"]
 [ext_resource type="Script" path="res://camera_2d.gd" id="3_jobkf"]
+[ext_resource type="Script" path="res://tbp_gui.gd" id="4_i06vw"]
+[ext_resource type="FontFile" uid="uid://bmn030xjmclem" path="res://assets/Instruction.otf" id="4_uwfw8"]
 
 [node name="ThreeBodyProblemContainer" type="Node2D"]
 script = ExtResource("1_epau5")
@@ -21,6 +23,35 @@ expand_mode = 1
 script = ExtResource("3_jobkf")
 
 [node name="TBPGui" type="CanvasLayer" parent="."]
+scale = Vector2(1.06, 1.06)
+transform = Transform2D(1.06, 0, 0, 1.06, 0, 0)
+script = ExtResource("4_i06vw")
+
+[node name="InputLabel" type="Label" parent="TBPGui"]
+offset_left = 462.85
+offset_top = 36.5
+offset_right = 817.15
+offset_bottom = 85.5
+theme_override_fonts/font = ExtResource("4_uwfw8")
+theme_override_font_sizes/font_size = 36
+text = "ParamsEditor"
+horizontal_alignment = 1
+
+[node name="Input" type="LineEdit" parent="TBPGui"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -104.062
+offset_top = 97.01
+offset_right = 104.061
+offset_bottom = 128.01
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("4_uwfw8")
+theme_override_font_sizes/font_size = 26
+placeholder_text = "command"
+alignment = 1
 
 [node name="CobjOne" parent="." instance=ExtResource("1_q3crn")]
 init_pos = Vector2(-25.92, -13.98)
@@ -34,3 +65,8 @@ color = Color(2.40654e-06, 0.638316, 0.714628, 1)
 [node name="CobjThree" parent="." instance=ExtResource("1_q3crn")]
 init_pos = Vector2(-87.465, -22.805)
 color = Color(0, 0.63034, 0.579712, 1)
+
+[connection signal="control_lock" from="TBPGui" to="." method="_on_tbp_gui_control_lock"]
+[connection signal="control_lock" from="TBPGui" to="Camera2D" method="_on_tbp_gui_control_lock"]
+[connection signal="paramsEditorData" from="TBPGui" to="." method="_on_tbp_gui_params_editor_data"]
+[connection signal="text_submitted" from="TBPGui/Input" to="TBPGui" method="_on_input_text_submitted"]
