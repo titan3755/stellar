@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dhmpop28jdvbq"]
+[gd_scene load_steps=8 format=3 uid="uid://dhmpop28jdvbq"]
 
 [ext_resource type="Script" path="res://three_body_problem_container.gd" id="1_epau5"]
 [ext_resource type="PackedScene" uid="uid://ckdorjbxjwpx8" path="res://celestial_object.tscn" id="1_q3crn"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://camera_2d.gd" id="3_jobkf"]
 [ext_resource type="Script" path="res://tbp_gui.gd" id="4_i06vw"]
 [ext_resource type="FontFile" uid="uid://bmn030xjmclem" path="res://assets/Instruction.otf" id="4_uwfw8"]
+
+[sub_resource type="SystemFont" id="SystemFont_dxlje"]
 
 [node name="ThreeBodyProblemContainer" type="Node2D"]
 script = ExtResource("1_epau5")
@@ -48,10 +50,27 @@ offset_bottom = 128.01
 grow_horizontal = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_fonts/font = ExtResource("4_uwfw8")
+theme_override_fonts/font = SubResource("SystemFont_dxlje")
 theme_override_font_sizes/font_size = 26
 placeholder_text = "command"
 alignment = 1
+
+[node name="IndepControlsGui" type="CanvasLayer" parent="."]
+
+[node name="Button" type="Button" parent="IndepControlsGui"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -119.385
+offset_top = 33.725
+offset_right = -35.385
+offset_bottom = 77.725
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("4_uwfw8")
+theme_override_font_sizes/font_size = 26
+text = "Reset"
+icon_alignment = 1
+text_direction = 2
 
 [node name="CobjOne" parent="." instance=ExtResource("1_q3crn")]
 init_pos = Vector2(-25.92, -13.98)
@@ -70,3 +89,4 @@ color = Color(0, 0.63034, 0.579712, 1)
 [connection signal="control_lock" from="TBPGui" to="Camera2D" method="_on_tbp_gui_control_lock"]
 [connection signal="paramsEditorData" from="TBPGui" to="." method="_on_tbp_gui_params_editor_data"]
 [connection signal="text_submitted" from="TBPGui/Input" to="TBPGui" method="_on_input_text_submitted"]
+[connection signal="pressed" from="IndepControlsGui/Button" to="." method="_on_button_pressed"]

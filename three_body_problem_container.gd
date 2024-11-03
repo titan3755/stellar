@@ -65,8 +65,79 @@ func input_process(_del: float):
 		$CobjTwo.acceleration = Vector2.ONE
 		$CobjThree.acceleration = Vector2.ONE
 
-func paramEditorDataProcessor(_data: String):
-	pass
+func paramEditorDataProcessor(data: String):
+	var keyValuePair = data.trim_prefix(" ").trim_suffix(" ").split("=", false, 1)
+	var key = keyValuePair[0]
+	var value = keyValuePair[1]
+	var twoValVector: Vector2
+	var threeValVector: Vector3
+	var pathToProperty = key.split("-", false, 0)
+	var celObjStore
+	
+	if !value.is_valid_float() && (pathToProperty[0] == "CelestialObjOne" || pathToProperty[0] == "CelestialObjTwo" || pathToProperty[0] == "CelestialObjThree") && (pathToProperty[1] == "position" || pathToProperty[1] == "velocity" || pathToProperty[1] == "acceleration") && (pathToProperty[1] != "color"):
+		var strSplt = value.split(",")
+		if strSplt.size() != 2:
+			return
+		if !strSplt[0].is_valid_float() || !strSplt[1].is_valid_float():
+			return
+		twoValVector = Vector2(strSplt[0].to_float(), strSplt[1].to_float())
+	
+	if !value.is_valid_int() && (pathToProperty[0] == "CelestialObjOne" || pathToProperty[0] == "CelestialObjTwo" || pathToProperty[0] == "CelestialObjThree") && (pathToProperty[1] == "color"):
+		var strSplt = value.split(",")
+		if strSplt.size() != 3:
+			return
+		if !strSplt[0].is_valid_int() || !strSplt[1].is_valid_int() || !strSplt[2].is_valid_int():
+			return
+		if strSplt[0].to_int() > 255 || strSplt[0].to_int() < 0 || strSplt[1].to_int() > 255 || strSplt[1].to_int() < 0 || strSplt[2].to_int() > 255 || strSplt[2].to_int() < 0:
+			return
+		threeValVector = Vector3(strSplt[0].to_int(), strSplt[1].to_int(), strSplt[2].to_int())
+	
+	if !value.is_valid_float() && (pathToProperty[0] == "CelestialObjOne" || pathToProperty[0] == "CelestialObjTwo" || pathToProperty[0] == "CelestialObjThree") && (pathToProperty[1] == "mass" || pathToProperty[1] == "radius" || pathToProperty[1] == "vdamp" || pathToProperty[1] == "vclamp" || pathToProperty[1] == "aclamp"):
+		return
+		
+	#if camera ... (to do)
+		
+	if !value.is_valid_float() && (pathToProperty[0] == "Main") && (pathToProperty[1] == "UniGravConst"):
+		return
+
+	if pathToProperty[0] != "CelestialObjOne" && pathToProperty[0] != "CelestialObjTwo" && pathToProperty[0] != "CelestialObjThree" && pathToProperty[0] != "Camera" && pathToProperty[0] != "Main":
+		return
+		
+	if pathToProperty[0]:
+		if pathToProperty[0] == "CelestialObjOne" || pathToProperty[0] == "CelestialObjTwo" || pathToProperty[0] == "CelestialObjThree":
+			if pathToProperty[0] == "CelestialObjOne":
+				celObjStore = $CobjOne
+			elif pathToProperty[0] == "CelestialObjTwo":
+				celObjStore = $CobjTwo
+			else:
+				celObjStore = $CobjThree
+			if pathToProperty[1]:
+				if pathToProperty[1] == "mass":
+					celObjStore.mass = value.to_float()
+				elif pathToProperty[1] == "radius":
+					celObjStore.radius = value.to_float()
+				elif pathToProperty[1] == "color":
+					celObjStore.color == Color8(threeValVector.x, threeValVector.y, threeValVector.z, 255)
+				elif pathToProperty[1] == "position":
+					celObjStore.position = twoValVector
+				elif pathToProperty[1] == "velocity":
+					celObjStore.velocity = twoValVector
+				elif pathToProperty[1] == "acceleration":
+					celObjStore.acceleration = twoValVector
+				elif pathToProperty[1] == "vclamp":
+					celObjStore.velocity_clamp = value.to_float()
+				elif pathToProperty[1] == "vdamp":
+					celObjStore.velocity_damping = value.to_float()
+				elif pathToProperty[1] == "aclamp":
+					celObjStore.acceleration_clamp = value.to_float()
+					
+		#if camera ... (to do)
+				
+		if pathToProperty[0] == "Main":
+			if pathToProperty[1]:
+				if pathToProperty[1] == "UniGravConst":
+					UNIVERSAL_GRAVITATIONAL_CONSTANT = value.to_float()
+			
 
 func _on_tbp_gui_control_lock(state: bool) -> void:
 	gui_state = state
@@ -74,6 +145,19 @@ func _on_tbp_gui_control_lock(state: bool) -> void:
 func _on_tbp_gui_params_editor_data(data: String) -> void:
 	paramEditorDataProcessor(data)
 	
+func _on_button_pressed() -> void:
+	$Camera2D.position = Vector2.ZERO
+	$Camera2D.zoom = Vector2.ONE
+	$CobjOne.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
+	$CobjTwo.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
+	$CobjThree.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
+	$CobjOne.velocity = Vector2(randf_range(-15, 15), randf_range(-15, 15))
+	$CobjTwo.velocity = Vector2(randf_range(-15, 15), randf_range(-15, 15))
+	$CobjThree.velocity = Vector2(randf_range(-15, 15), randf_range(-15, 15))
+	$CobjOne.acceleration = Vector2.ONE
+	$CobjTwo.acceleration = Vector2.ONE
+	$CobjThree.acceleration = Vector2.ONE
+	UNIVERSAL_GRAVITATIONAL_CONSTANT = 6.6743 * pow(10, -1)
 	
 ## Modifiable data -->>
 ## 1. CobjOne -->>
