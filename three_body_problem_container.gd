@@ -55,6 +55,8 @@ func input_process(_del: float):
 	if Input.is_action_just_pressed("reset_viewport"):
 		$Camera2D.position = Vector2.ZERO
 		$Camera2D.zoom = Vector2.ONE
+		$Camera2D.cam_velocity = 400.0
+		$Camera2D.cam_zoom_velocity = 2.5
 		$CobjOne.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
 		$CobjTwo.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
 		$CobjThree.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
@@ -95,7 +97,16 @@ func paramEditorDataProcessor(data: String):
 	if !value.is_valid_float() && (pathToProperty[0] == "CelestialObjOne" || pathToProperty[0] == "CelestialObjTwo" || pathToProperty[0] == "CelestialObjThree") && (pathToProperty[1] == "mass" || pathToProperty[1] == "radius" || pathToProperty[1] == "vdamp" || pathToProperty[1] == "vclamp" || pathToProperty[1] == "aclamp"):
 		return
 		
-	#if camera ... (to do)
+	if !value.is_valid_float() && pathToProperty[0] == "Camera" && (pathToProperty[1] == "camVel" || pathToProperty[1] == "camZoomVel"):
+		return
+		
+	if !value.is_valid_float() && pathToProperty[0] == "Camera" && pathToProperty[1] == "position":
+		var strSplt = value.split(",")
+		if strSplt.size() != 2:
+			return
+		if !strSplt[0].is_valid_float() || strSplt[1].is_valid_float():
+			return
+		twoValVector = Vector2(strSplt[0].to_float(), strSplt[1].to_float())
 		
 	if !value.is_valid_float() && (pathToProperty[0] == "Main") && (pathToProperty[1] == "UniGravConst"):
 		return
@@ -131,16 +142,27 @@ func paramEditorDataProcessor(data: String):
 				elif pathToProperty[1] == "aclamp":
 					celObjStore.acceleration_clamp = value.to_float()
 					
-		#if camera ... (to do)
+		if pathToProperty[0] == "Camera":
+			if pathToProperty[1]:
+				if pathToProperty[1] == "position":
+					$Camera2D.position = twoValVector
+				elif pathToProperty[1] == "camVel":
+					$Camera2D.cam_velocity = value.to_float()
+				elif pathToProperty[1] == "camZoomVel":
+					$Camera2D.cam_zoom_velocity = value.to_float()
 				
 		if pathToProperty[0] == "Main":
 			if pathToProperty[1]:
 				if pathToProperty[1] == "UniGravConst":
 					UNIVERSAL_GRAVITATIONAL_CONSTANT = value.to_float()
-			
+	$IndepControlsGui/StatusLabel.text = "cmd execution successful"	
 
 func _on_tbp_gui_control_lock(state: bool) -> void:
 	gui_state = state
+	if !gui_state == true:
+		$IndepControlsGui/StatusLabel.text = "Press F2 to open command processor (paramsEditor)"
+	if gui_state == true:
+		$IndepControlsGui/StatusLabel.text = "waiting for command input"
 
 func _on_tbp_gui_params_editor_data(data: String) -> void:
 	paramEditorDataProcessor(data)
@@ -148,6 +170,8 @@ func _on_tbp_gui_params_editor_data(data: String) -> void:
 func _on_button_pressed() -> void:
 	$Camera2D.position = Vector2.ZERO
 	$Camera2D.zoom = Vector2.ONE
+	$Camera2D.cam_velocity = 400.0
+	$Camera2D.cam_zoom_velocity = 2.5
 	$CobjOne.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
 	$CobjTwo.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
 	$CobjThree.position = Vector2(randf_range(-100, 100), randf_range(-100, 100))
@@ -158,6 +182,10 @@ func _on_button_pressed() -> void:
 	$CobjTwo.acceleration = Vector2.ONE
 	$CobjThree.acceleration = Vector2.ONE
 	UNIVERSAL_GRAVITATIONAL_CONSTANT = 6.6743 * pow(10, -1)
+	
+func _on_input_text_changed(new_text: String) -> void:
+	if $IndepControlsGui/StatusLabel.text == "cmd execution successful":
+		$IndepControlsGui/StatusLabel.text = "waiting for command input"
 	
 ## Modifiable data -->>
 ## 1. CobjOne -->>

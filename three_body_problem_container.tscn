@@ -8,6 +8,7 @@
 [ext_resource type="FontFile" uid="uid://bmn030xjmclem" path="res://assets/Instruction.otf" id="4_uwfw8"]
 
 [sub_resource type="SystemFont" id="SystemFont_dxlje"]
+subpixel_positioning = 0
 
 [node name="ThreeBodyProblemContainer" type="Node2D"]
 script = ExtResource("1_epau5")
@@ -25,8 +26,9 @@ expand_mode = 1
 script = ExtResource("3_jobkf")
 
 [node name="TBPGui" type="CanvasLayer" parent="."]
+offset = Vector2(-36.435, 0)
 scale = Vector2(1.06, 1.06)
-transform = Transform2D(1.06, 0, 0, 1.06, 0, 0)
+transform = Transform2D(1.06, 0, 0, 1.06, -36.435, 0)
 script = ExtResource("4_i06vw")
 
 [node name="InputLabel" type="Label" parent="TBPGui"]
@@ -46,7 +48,7 @@ anchor_right = 0.5
 offset_left = -104.062
 offset_top = 97.01
 offset_right = 104.061
-offset_bottom = 128.01
+offset_bottom = 141.01
 grow_horizontal = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -56,6 +58,24 @@ placeholder_text = "command"
 alignment = 1
 
 [node name="IndepControlsGui" type="CanvasLayer" parent="."]
+
+[node name="StatusLabel" type="Label" parent="IndepControlsGui"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -229.0
+offset_top = -79.205
+offset_right = 229.0
+offset_bottom = -56.205
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("4_uwfw8")
+theme_override_font_sizes/font_size = 16
+text = "Press F2 to open command processor (paramsEditor)"
+horizontal_alignment = 1
+vertical_alignment = 2
 
 [node name="Button" type="Button" parent="IndepControlsGui"]
 anchors_preset = 1
@@ -88,5 +108,6 @@ color = Color(0, 0.63034, 0.579712, 1)
 [connection signal="control_lock" from="TBPGui" to="." method="_on_tbp_gui_control_lock"]
 [connection signal="control_lock" from="TBPGui" to="Camera2D" method="_on_tbp_gui_control_lock"]
 [connection signal="paramsEditorData" from="TBPGui" to="." method="_on_tbp_gui_params_editor_data"]
+[connection signal="text_changed" from="TBPGui/Input" to="." method="_on_input_text_changed"]
 [connection signal="text_submitted" from="TBPGui/Input" to="TBPGui" method="_on_input_text_submitted"]
 [connection signal="pressed" from="IndepControlsGui/Button" to="." method="_on_button_pressed"]
